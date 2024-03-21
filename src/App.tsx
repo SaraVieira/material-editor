@@ -1,13 +1,14 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, RoundedBox, Sphere, Stage } from "@react-three/drei";
+
 import { useState } from "react";
-import { DoubleSide, MeshPhysicalMaterial, TextureLoader } from "three";
+
 import { cn } from "./lib/utils";
 import { Slider } from "./components/ui/slider";
 import { Label } from "./components/ui/label";
 import { ColorPicker } from "./components/ColorPicker";
 import { Checkbox } from "./components/ui/checkbox";
 import { Input } from "./components/ui/input";
+import { MainScene } from "./components/MainScene";
 
 function App() {
   const [color, setColor] = useState("#ECC833");
@@ -231,7 +232,7 @@ function App() {
           </div>
         </div>
         <Canvas shadows>
-          <Start
+          <MainScene
             color={color}
             roughness={roughness[0]}
             metalness={metalness[0]}
@@ -259,71 +260,4 @@ function App() {
     </div>
   );
 }
-
-const Start = ({
-  color,
-  roughness,
-  metalness,
-  transmission,
-  thickness,
-  clearcoat,
-  reflectivity,
-  iridescence,
-  sheen,
-  transparent,
-  emissiveColor,
-  emissiveIntensity,
-  sheenColor,
-  roughnessMap,
-  map,
-  aoMap,
-  aoIntensity,
-  normalIntensity,
-  normalMap,
-  displacementlIntensity,
-  displacementlMap,
-}: any) => {
-  const material = new MeshPhysicalMaterial({
-    side: DoubleSide,
-    ...(map ? { map: new TextureLoader().load(map) } : { color }),
-    ...(roughnessMap
-      ? { roughnessMap: new TextureLoader().load(roughnessMap) }
-      : { roughness }),
-    ...(aoMap
-      ? { aoMap: new TextureLoader().load(aoMap), aoMapIntensity: aoIntensity }
-      : {}),
-    ...(normalMap
-      ? {
-          bumpMap: new TextureLoader().load(normalMap),
-          bumpScale: normalIntensity,
-        }
-      : {}),
-    ...(displacementlMap
-      ? {
-          displacementMap: new TextureLoader().load(displacementlMap),
-          displacementScale: displacementlIntensity,
-        }
-      : {}),
-
-    metalness,
-    transmission,
-    thickness,
-    clearcoat,
-    reflectivity,
-    iridescence,
-    sheen,
-    sheenColor,
-    transparent,
-    emissive: emissiveColor,
-    emissiveIntensity: emissiveIntensity,
-  });
-  return (
-    <Stage environment={"lobby"}>
-      <Sphere args={[5, 512, 512]} material={material}></Sphere>
-      <RoundedBox args={[3, 3, 3]} />
-      <OrbitControls />
-    </Stage>
-  );
-};
-
 export default App;
